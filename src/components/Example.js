@@ -3,6 +3,7 @@ import YouTube from 'react-youtube';
 
 function Example() {
     const [videoId, setVideoId] = useState(null);
+    const [title, setTitle] = useState(null);
     const [player, setPlayer] = useState(null);
     const [timer, setTimer] = useState(null)
     const [isMounted, setIsMounted] = useState(false)
@@ -12,6 +13,7 @@ function Example() {
             const result = await fetch('https://lactranh.herokuapp.com/api/get?key=lactranh')
             const data = await result.json()
             setVideoId(data.url)
+            setTitle(data.name)
         } catch (e) {
             console.error(e)
         }
@@ -39,8 +41,8 @@ function Example() {
     };
 
     const opts = {
-        height: '500',
-        width: '700',
+        // height: '500',
+        // width: '700',
         playerVars: {
             autoplay: 1,
         },
@@ -49,7 +51,10 @@ function Example() {
     return (
         <div className='wrapper p-2'>
             <div>
-                <YouTube videoId={videoId} onReady={onReady} opts={opts} />
+                <div className='wrapper-youtube'>
+                    <h3 className='box'>{title}</h3>
+                    <YouTube videoId={videoId} onReady={onReady} opts={opts} />
+                </div>
                 <div className='control'>
                     <button type="button" className='button is-primary mr-2' onClick={onPlayVideo} disabled={!player}>
                         Play
