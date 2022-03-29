@@ -16,7 +16,7 @@ function Example() {
             console.error(e)
         }
         clearTimeout(timer)
-        setTimer(setTimeout(updateVideoId, 200))
+        setTimer(setTimeout(updateVideoId, 1000))
     }
 
     useEffect(() => {
