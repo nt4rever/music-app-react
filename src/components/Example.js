@@ -5,30 +5,40 @@ function Example() {
     const [videoId, setVideoId] = useState("fzu4VT-QWK4");
     const [title, setTitle] = useState(null);
     const [player, setPlayer] = useState(null);
-    const [timer, setTimer] = useState(null)
-    const [isMounted, setIsMounted] = useState(false)
     const [isPlay, setIsPlay] = useState(false);
-
-    async function updateVideoId() {
-        try {
-            const result = await fetch('https://lactranh.herokuapp.com/api/get?key=lactranh')
-            const data = await result.json()
-            setVideoId(data.url)
-            setTitle(data.name)
-            console.clear()
-        } catch (e) {
-            // console.error(e)
-        }
-        clearTimeout(timer)
-        setTimer(setTimeout(updateVideoId, 1000))
-    }
+    const [user, setUser] = useState("lactranh");
+    const [listUser, setListUser] = useState([]);
+    const axios = require('axios');
 
     useEffect(() => {
-        if (!isMounted) {
-            updateVideoId()
-            setIsMounted(true)
+        const getListUser = async () => {
+            try {
+                const result = await axios.get('https://lactranh.herokuapp.com/api/user', { params: { key: "lactranh" } });
+                setListUser(result.data)
+                console.clear()
+            } catch (e) {
+                console.error(e)
+            }
         }
-    })
+        getListUser()
+    }, [])
+
+    useEffect(() => {
+        const updateVideoId = async () => {
+            try {
+                const result = await axios.get('https://lactranh.herokuapp.com/api/get', { params: { key: "lactranh", user: user } });
+                setVideoId(result.data.url)
+                setTitle(result.data.name)
+                console.clear()
+            } catch (e) {
+                console.error(e)
+            }
+        }
+        const timerId = setInterval(() => {
+            updateVideoId()
+        }, 1500);
+        return () => clearInterval(timerId);
+    }, [user])
 
     const onReady = (event) => {
         setPlayer(event.target);
@@ -50,6 +60,10 @@ function Example() {
         },
     };
 
+    const handleChangeSelected = (event) => {
+        setUser(event.target.value)
+    }
+
     return (
         <div className='wrapper p-2'>
             <div>
@@ -60,7 +74,7 @@ function Example() {
                 <div className='control'>
                     {
                         isPlay ? (
-                            <button type="button" className='button is-danger' onClick={onPauseVideo} disabled={!player}>
+                            <button type="button" className='button is-danger mr-2' onClick={onPauseVideo} disabled={!player}>
                                 Pause
                             </button>
                         ) : (
@@ -69,6 +83,15 @@ function Example() {
                             </button>
                         )
                     }
+                    <div class="select is-primary">
+                        <select value={user} onChange={handleChangeSelected}>
+                            {
+                                listUser.map((data) => (
+                                    <option value={data.user}>{data.user}</option>
+                                ))
+                            }
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>
