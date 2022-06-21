@@ -13,7 +13,7 @@ function Example() {
     useEffect(() => {
         const getListUser = async () => {
             try {
-                const result = await axios.get('https://lactranh.herokuapp.com/api/user', { params: { key: "lactranh" } });
+                const result = await axios.get('https://api.nt4rever.live/api/v2/user', { params: { api_token: "liigNo5RnfjHhQghSoD2hlJY3Ril8f2JnITbNu63lsjSnrOeSCF93BHZ77Aq" } });
                 setListUser(result.data)
                 console.clear()
             } catch (e) {
@@ -26,7 +26,7 @@ function Example() {
     useEffect(() => {
         const updateVideoId = async () => {
             try {
-                const result = await axios.get('https://lactranh.herokuapp.com/api/get', { params: { key: "lactranh", user: user } });
+                const result = await axios.get('https://api.nt4rever.live/api/v2/get', { params: { api_token: "liigNo5RnfjHhQghSoD2hlJY3Ril8f2JnITbNu63lsjSnrOeSCF93BHZ77Aq", user: user } });
                 setVideoId(result.data.url)
                 setTitle(result.data.name)
                 console.clear()
